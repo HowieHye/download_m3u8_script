@@ -30,3 +30,5 @@ python小脚本
 - [@nilaoda](https://github.com/nilaoda)
 
 - [FFmpeg](http://ffmpeg.org/)
+
+- [刘明野](https://liumingye.cn/)
