@@ -15,7 +15,7 @@ python小脚本
 
 这只是一个小脚本,用来解析出[全网影片搜索](http://lab.liumingye.cn/)里面的m3u8地址
 
-下载m3u8使用的是[@nilaoda](https://github.com/nilaoda)的开源项目(N_m3u8DL-CLI)(https://github.com/nilaoda/N_m3u8DL-CLI)
+下载m3u8使用的是[@nilaoda](https://github.com/nilaoda)的开源项目[N_m3u8DL-CLI](https://github.com/nilaoda/N_m3u8DL-CLI)
 
 ## 使用方法
 
