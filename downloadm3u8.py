@@ -47,13 +47,20 @@ def searchAllUrl(url0, url):
     resultOfName = re.compile(patOfName, re.S).findall(dataOfFirstPage)
     return resultOfName, resultOfPage
 
+def findName(url):
+    randomUA()
+    dataOfFirstPage = urllib.request.urlopen(url, timeout=60).read().decode("utf-8", "ignore")
+    pat = "vod_name='(.*?)',"
+    resultName = re.compile(pat,re.S).findall(dataOfFirstPage)
+    return resultName
+
 
 def findM3U8(page):
-    patOfM3U8 = 'url":"https:(.*?)","url_next'
+    patOfM3U8 = 'url":"http:(.*?)","url_next'
     randomUA()
     dataOfCurPage = urllib.request.urlopen(page).read().decode("utf-8", "ignore")
     resultOfCurPage = re.compile(patOfM3U8, re.S).findall(dataOfCurPage)[0]
-    resultOfCurPageUrl = "https:" + resultOfCurPage.replace('\/', '/')
+    resultOfCurPageUrl = "http:" + resultOfCurPage.replace('\/', '/')
     return resultOfCurPageUrl
 
 
@@ -76,8 +83,10 @@ def main():
         curPageUrl = "http://lab.liumingye.cn/vodplay/" + url0 + result[1][i]
         print(curPageUrl)
         m3u8url = findM3U8(curPageUrl)
-        downloadVideo(result[1][i], result[0][i])
-        print("正在从" + m3u8url + "下载第" + result[0][i] + "集")
+        NamePre = findName(url)
+        Name = NamePre + result[0][i]
+        downloadVideo(m3u8url, Name)
+        print("正在从" + m3u8url + "下载" + Name)
         time.sleep(5)
 
 
