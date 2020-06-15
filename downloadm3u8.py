@@ -51,16 +51,16 @@ def findName(url):
     randomUA()
     dataOfFirstPage = urllib.request.urlopen(url, timeout=60).read().decode("utf-8", "ignore")
     pat = "vod_name='(.*?)',"
-    resultName = re.compile(pat,re.S).findall(dataOfFirstPage)
+    resultName = re.compile(pat,re.S).findall(dataOfFirstPage)[0]
     return resultName
 
 
 def findM3U8(page):
-    patOfM3U8 = 'url":"http:(.*?)","url_next'
+    patOfM3U8 = 'url":"https?:(.*?)","url_next'
     randomUA()
     dataOfCurPage = urllib.request.urlopen(page).read().decode("utf-8", "ignore")
     resultOfCurPage = re.compile(patOfM3U8, re.S).findall(dataOfCurPage)[0]
-    resultOfCurPageUrl = "http:" + resultOfCurPage.replace('\/', '/')
+    resultOfCurPageUrl = "http:"+resultOfCurPage.replace('\/', '/')
     return resultOfCurPageUrl
 
 
@@ -87,7 +87,7 @@ def main():
         Name = NamePre + result[0][i]
         downloadVideo(m3u8url, Name)
         print("正在从" + m3u8url + "下载" + Name)
-        time.sleep(5)
+        time.sleep(60)
 
 
 if __name__ == '__main__':
