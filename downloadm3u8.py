@@ -4,6 +4,7 @@ import time
 import urllib.request
 import urllib
 import win32api
+import logging
 
 uapools = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36 Edg/80.0.361.50",
@@ -15,6 +16,10 @@ uapools = [
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E; SE 2.X MetaSr 1.0)"
 ]
 
+timenow = time.strftime("%Y_%m_%d_%H_%M_%S")
+logfilename = ".\\log\\"+timenow+".log"
+logging.basicConfig(filename=logfilename,format='%(levelname)s:%(asctime)s:%(message)s',level=logging.INFO)
+
 
 def searchByUrl(url):
     if("html" in url):
@@ -23,6 +28,7 @@ def searchByUrl(url):
         url = url + ".html"
     patOfUrl = '/vodplay/(.*?)-1.html'
     urlOut = re.compile(patOfUrl, re.S).findall(url)[0]
+    logging.info("urlOut:"+urlOut)
     return urlOut
 
 
@@ -33,7 +39,7 @@ def randomUA():
     uaForN = "User-Agent:" + this_ua
     opener.addheaders = [ua]
     urllib.request.install_opener(opener)
-    print("当前使用的ua:" + str(this_ua))
+    logging.info("当前使用的ua:" + str(this_ua))
     return uaForN
 
 
@@ -64,10 +70,19 @@ def findM3U8(page):
     return resultOfCurPageUrl
 
 
+
+def downloadM3U8(index):
+    print("共有"+str(index)+"集/期")
+    startindex = input("请输入从第几集开始下载:")
+    endindex = input("请输入下载到第几集:")
+    return startindex,endindex
+
+
 def downloadVideo(url, name):
     ua = randomUA()
     parameter = url + " --saveName " + name + " --enableDelAfterDone --headers headers=" + ua
-    win32api.ShellExecute(0, 'open', 'N_m3u8DL-CLI.exe', parameter, '', 1)
+    win32api.ShellExecute(0, 'open', 'N_m3u8DL-CLI.exe', parameter, '', 0)
+    logging.info(parameter)
     return
 
 
@@ -75,19 +90,22 @@ def main():
     url = input("please input url:")
     url0 = searchByUrl(url)
     result = searchAllUrl(url0, url)
-    print(result)
-    print(len(result[0]))
-    print(len(result[1]))
+    logging.info(result)
 
-    for i in range(0, len(result[1])):
+    startindex,endindex = downloadM3U8(len(result[1]))
+    logging.info("startindex:"+startindex)
+    logging.info("endindex:"+endindex)
+    print("请等待下载完成!")
+    for i in range(int(startindex)-1, int(endindex)):
         curPageUrl = "http://lab.liumingye.cn/vodplay/" + url0 + result[1][i]
-        print(curPageUrl)
+        logging.info("curPageUrl:"+curPageUrl)
         m3u8url = findM3U8(curPageUrl)
         NamePre = findName(url)
         Name = NamePre + result[0][i]
         downloadVideo(m3u8url, Name)
-        print("正在从" + m3u8url + "下载" + Name)
-        time.sleep(60)
+        logging.info("正在从" + m3u8url + "下载" + Name)
+        time.sleep(30)
+
 
 
 if __name__ == '__main__':
