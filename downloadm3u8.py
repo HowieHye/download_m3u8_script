@@ -91,6 +91,7 @@ def downloadVideo(url, name):
 
 
 def main():
+    init()
     url = input("please input url:")
     url0 = searchByUrl(url)
     result = searchAllUrl(url0, url)
