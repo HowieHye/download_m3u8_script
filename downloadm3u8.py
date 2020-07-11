@@ -1,5 +1,6 @@
 import random
 import re
+import os
 import time
 import urllib.request
 import urllib
@@ -16,9 +17,12 @@ uapools = [
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E; SE 2.X MetaSr 1.0)"
 ]
 
-timenow = time.strftime("%Y_%m_%d_%H_%M_%S")
-logfilename = ".\\log\\"+timenow+".log"
-logging.basicConfig(filename=logfilename,format='%(levelname)s:%(asctime)s:%(message)s',level=logging.INFO)
+def init():
+    if not os.path.exists(".\\log"):
+        os.mkdir(".\\log")
+    timenow = time.strftime("%Y_%m_%d_%H_%M_%S")
+    logfilename = ".\\log\\"+timenow+".log"
+    logging.basicConfig(filename=logfilename,format='%(levelname)s:%(asctime)s:%(message)s',level=logging.INFO)
 
 
 def searchByUrl(url):
