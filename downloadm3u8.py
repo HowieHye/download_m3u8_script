@@ -12,7 +12,6 @@ uapools = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0",
     "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.5",
     "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0",
-    "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) CriOS/27.0.1453.10 Mobile/10B350 Safari/8536.25",
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E) QQBrowser/6.9.11079.201",
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E; SE 2.X MetaSr 1.0)"
 ]
@@ -22,7 +21,7 @@ def init():
         os.mkdir(".\\log")
     timenow = time.strftime("%Y_%m_%d_%H_%M_%S")
     logfilename = ".\\log\\"+timenow+".log"
-    logging.basicConfig(filename=logfilename,format='%(levelname)s:%(asctime)s:%(message)s',level=logging.INFO)
+    logging.basicConfig(filename=logfilename,format='%(levelname)s:%(asctime)s:%(message)s',level=logging.INFO,datefmt='[%d/%b/%Y %H:%M:%S]')
 
 
 def searchByUrl(url):
@@ -43,7 +42,7 @@ def randomUA():
     uaForN = "User-Agent:" + this_ua
     opener.addheaders = [ua]
     urllib.request.install_opener(opener)
-    logging.info("当前使用的ua:" + str(this_ua))
+    logging.info("ua:" + str(this_ua))
     return uaForN
 
 
@@ -109,8 +108,12 @@ def main():
         Name = NamePre + result[0][i]
         downloadVideo(m3u8url, Name)
         logging.info("正在从" + m3u8url + "下载" + Name)
-        time.sleep(30)
-
+        printf("正在从" + m3u8url + "下载" + Name)
+        time.sleep(90)
+    print("请等待合并完成!")
+    print("程序将自动退出!")
+    print("感谢使用!")
+    time.sleep(10)
 
 
 if __name__ == '__main__':
