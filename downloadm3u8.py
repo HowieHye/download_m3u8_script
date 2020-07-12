@@ -108,7 +108,7 @@ def main():
         Name = NamePre + result[0][i]
         downloadVideo(m3u8url, Name)
         logging.info("正在从" + m3u8url + "下载" + Name)
-        printf("正在从" + m3u8url + "下载" + Name)
+        print("正在从" + m3u8url + "下载" + Name)
         time.sleep(90)
     print("请等待合并完成!")
     print("程序将自动退出!")
