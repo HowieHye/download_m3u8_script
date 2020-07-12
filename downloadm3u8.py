@@ -16,12 +16,14 @@ uapools = [
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E; SE 2.X MetaSr 1.0)"
 ]
 
+
 def init():
     if not os.path.exists(".\\log"):
         os.mkdir(".\\log")
     timenow = time.strftime("%Y_%m_%d_%H_%M_%S")
     logfilename = ".\\log\\"+timenow+".log"
-    logging.basicConfig(filename=logfilename,format='%(levelname)s:%(asctime)s:%(message)s',level=logging.INFO,datefmt='[%d/%b/%Y %H:%M:%S]')
+    logging.basicConfig(filename=logfilename, format='%(levelname)s:%(asctime)s:%(message)s',
+                        level=logging.INFO, datefmt='[%d/%b/%Y %H:%M:%S]')
 
 
 def searchByUrl(url):
@@ -29,7 +31,7 @@ def searchByUrl(url):
         pass
     else:
         url = url + ".html"
-    patOfUrl = '/vodplay/(.*?)-1.html'
+    patOfUrl = '/vodplay/(.*?)-[0-9]+.html'
     urlOut = re.compile(patOfUrl, re.S).findall(url)[0]
     logging.info("urlOut:"+urlOut)
     return urlOut
@@ -48,7 +50,8 @@ def randomUA():
 
 def searchAllUrl(url0, url):
     randomUA()
-    dataOfFirstPage = urllib.request.urlopen(url, timeout=60).read().decode("utf-8", "ignore")
+    dataOfFirstPage = urllib.request.urlopen(
+        url, timeout=60).read().decode("utf-8", "ignore")
     patOfEveryPage = '<a href="/vodplay/' + url0 + '(.*?)">.*?</a></li>'
     patOfName = '<a href="/vodplay/' + url0 + '.*?>(.*?)</a></li>'
 
@@ -56,34 +59,37 @@ def searchAllUrl(url0, url):
     resultOfName = re.compile(patOfName, re.S).findall(dataOfFirstPage)
     return resultOfName, resultOfPage
 
+
 def findName(url):
     randomUA()
-    dataOfFirstPage = urllib.request.urlopen(url, timeout=60).read().decode("utf-8", "ignore")
+    dataOfFirstPage = urllib.request.urlopen(
+        url, timeout=60).read().decode("utf-8", "ignore")
     pat = "vod_name='(.*?)',"
-    resultName = re.compile(pat,re.S).findall(dataOfFirstPage)[0]
+    resultName = re.compile(pat, re.S).findall(dataOfFirstPage)[0]
     return resultName
 
 
 def findM3U8(page):
     patOfM3U8 = 'url":"https?:(.*?)","url_next'
     randomUA()
-    dataOfCurPage = urllib.request.urlopen(page).read().decode("utf-8", "ignore")
+    dataOfCurPage = urllib.request.urlopen(
+        page).read().decode("utf-8", "ignore")
     resultOfCurPage = re.compile(patOfM3U8, re.S).findall(dataOfCurPage)[0]
     resultOfCurPageUrl = "http:"+resultOfCurPage.replace('\/', '/')
     return resultOfCurPageUrl
-
 
 
 def downloadM3U8(index):
     print("共有"+str(index)+"集/期")
     startindex = input("请输入从第几集开始下载:")
     endindex = input("请输入下载到第几集:")
-    return startindex,endindex
+    return startindex, endindex
 
 
 def downloadVideo(url, name):
     ua = randomUA()
-    parameter = url + " --saveName " + name + " --enableDelAfterDone --headers headers=" + ua
+    parameter = url + " --saveName " + name + \
+        " --enableDelAfterDone --headers headers=" + ua
     win32api.ShellExecute(0, 'open', 'N_m3u8DL-CLI.exe', parameter, '', 0)
     logging.info(parameter)
     return
@@ -96,7 +102,7 @@ def main():
     result = searchAllUrl(url0, url)
     logging.info(result)
 
-    startindex,endindex = downloadM3U8(len(result[1]))
+    startindex, endindex = downloadM3U8(len(result[1]))
     logging.info("startindex:"+startindex)
     logging.info("endindex:"+endindex)
     print("请等待下载完成!")
